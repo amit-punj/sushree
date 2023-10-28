@@ -1,10 +1,24 @@
 // import logo from './logo.svg';
 import './App.css';
-import Todo from './pages/todo';
+import Header from './pages/layouts/Header';
+import Navbar from './pages/layouts/Navbar';
+import Todo from './pages/Todo';
+import Home from './pages/Home';
+import Calculator from './pages/Calculator';
+import { Route, Routes } from 'react-router-dom';
 
 function App() {
   return (
-    <Todo/>
+    <>
+      <Header />
+      {/* <Navbar/> */}
+        <Routes>
+          <Route path='/' element={<Home/>}></Route>
+          <Route path='/todo' element={<Todo/>}></Route>
+          <Route path='/calculator' element={<Calculator/>}></Route>
+        </Routes>
+      {/* <Todo/> */}
+    </>
   );
 }
 
