@@ -15,7 +15,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 
 import { Link as LinkRouter } from "react-router-dom"
 
-const pages = ['home','todo', 'calculator'];
+const pages = ['home','todo', 'calculator', 'signup', 'signin'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 function Header() {
