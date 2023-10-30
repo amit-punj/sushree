@@ -11,6 +11,7 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import { Stack, Alert } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 function Copyright(props) {
@@ -34,15 +35,98 @@ function Copyright(props) {
 // TODO remove, this demo shouldn't need to reset the theme.
 
 const defaultTheme = createTheme();
-
 export default function SignUp() {
+  const [firstname, setFirstname] = React.useState();
+  const [lastname, setLastname] = React.useState();
+  const [email, setEmail] = React.useState();
+  const [pass, setPass] = React.useState();
+  // Input Errors
+  const [firstnameError, setFirstnameError] = React.useState(false);
+  const [lastnameError, setLastnameError] = React.useState(false);
+  const [emailError, setEmailError] = React.useState(false);
+  const [passError, setPassError] = React.useState(false);
+
+  // state for form validation
+  const [formvalid, setFormvalid] = React.useState();
+
+  // state for sucessfull submission of form
+  const [success, setSuccess] = React.useState();
+  //email check function
+  const isEmail = (email) =>
+    /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
+
+  //Validation for onBlur Username
+  const handlefirstname = () => {
+    console.log(firstname);
+    if (!firstname) {
+      setFirstnameError(true);
+      return;
+    }
+    setFirstnameError(false);
+  };
+
+  //validation for onBlur lastname
+  const handlelastname = () => {
+    console.log(lastname);
+    if (!lastname) {
+      setLastnameError(true);
+      return;
+    }
+    setLastnameError(false);
+  };
+
+  //validation for onBlur email
+  const handleEmail = () => {
+    console.log(isEmail(email));
+    if (!isEmail(email)) {
+      setEmailError(true);
+      return;
+    }
+    setEmailError(false);
+  };
+
+  //validate for onBlur password
+  const handlePassword = () => {
+    if (!pass || pass.length < 5 || pass.length > 20) {
+      setPassError(true);
+      return;
+    }
+    setPassError(false);
+  };
+
+  // submit handler
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    setSuccess(null);
+
+    if (firstnameError || !firstname) {
+      setFormvalid("Enter First Name");
+      return;
+    }
+    if (lastnameError || !lastname) {
+      setFormvalid("Enter Last Name");
+      return;
+    }
+    if (emailError || !email) {
+      setFormvalid("Enter Valid Email Id");
+      return;
+    }
+    if (passError || !pass) {
+      setFormvalid(
+        "Password is set btw 5 - 20 characters long. Please Re-Enter"
+      );
+      return;
+    }
+    setFormvalid(null);
+
+    // Proceed to use the information passed
+    console.log("First Name : " + firstname);
+    console.log("Last Name : " + lastname);
+    console.log("Email : " + email);
+    console.log("Password : " + pass);
+
+    //Show Successfull Submittion
+    setSuccess("Form Submitted Successfully");
   };
 
   return (
@@ -74,6 +158,10 @@ export default function SignUp() {
                 <TextField
                   autoComplete="given-name"
                   name="firstName"
+                  value={firstname}
+                  onChange={(e) => setFirstname(e.target.value)}
+                  error={firstnameError}
+                  onBlur={handlefirstname}
                   required
                   fullWidth
                   id="firstName"
@@ -86,6 +174,10 @@ export default function SignUp() {
                   required
                   fullWidth
                   id="lastName"
+                  error={lastnameError}
+                  value={lastname}
+                  onChange={(e) => setLastname(e.target.value)}
+                  onBlur={handlelastname}
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
@@ -95,7 +187,11 @@ export default function SignUp() {
                 <TextField
                   required
                   fullWidth
+                  error={emailError}
                   id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onBlur={handleEmail}
                   label="Email Address"
                   name="email"
                   autoComplete="email"
@@ -109,6 +205,10 @@ export default function SignUp() {
                   label="Password"
                   type="password"
                   id="password"
+                  error={passError}
+                  value={pass}
+                  onChange={(e) => setPass(e.target.value)}
+                  onBlur={handlePassword}
                   autoComplete="new-password"
                 />
               </Grid>
@@ -129,6 +229,20 @@ export default function SignUp() {
             >
               Sign Up
             </Button>
+            {formvalid && (
+              <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
+                <Alert severity="error" size="small">
+                  {formvalid}
+                </Alert>
+              </Stack>
+            )}
+            {success && (
+              <Stack sx={{ width: "100%", paddingTop: "10px" }} spacing={2}>
+                <Alert severity="success" size="small">
+                  {success}
+                </Alert>
+              </Stack>
+            )}
             <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="#" variant="body2">
